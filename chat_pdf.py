@@ -37,3 +37,11 @@ with st.sidebar:
         st.subheader("PDF Preview")
         display_pdf(pdf_file)
 
+if st.button("Add to Knowledge Base"):
+    with st.spinner("Adding PDF to knowledge base..."):
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
+            f.write(pdf_file.getvalue())
+            st.session_state,app.add(f.name, data_type="pdf_file")
+        os.remove(f.name)
+    st.success(f"Added {pdf_file.name} to knowlege base!")
+
