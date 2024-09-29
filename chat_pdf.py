@@ -23,9 +23,17 @@ def display_pdf(file):
 
 st.title("PersoBot")
 st.caption("This is a personal chatbot that works without internet. it's based on llama3.2:latest")
-
 db_path = tempfile.mktemp()
 if 'app' not in st.session_state:
     st.session_state.app = embedchain_bot(db_path)
 if 'messages' not in st.session_state:
     st.session_state.messages = []
+
+with st.sidebar:
+    st.header("PDF Upload")
+    pdf_file = st.file_uploader("Upload a PDF file", type= "pdf")
+
+    if pdf_file:
+        st.subheader("PDF Preview")
+        display_pdf(pdf_file)
+
