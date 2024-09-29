@@ -41,7 +41,22 @@ if st.button("Add to Knowledge Base"):
     with st.spinner("Adding PDF to knowledge base..."):
         with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
             f.write(pdf_file.getvalue())
-            st.session_state,app.add(f.name, data_type="pdf_file")
+            st.session_state.app.add(f.name, data_type="pdf_file")
         os.remove(f.name)
     st.success(f"Added {pdf_file.name} to knowlege base!")
 
+
+for i, msg in enumerate(st.session_state.messages):
+    message(msg["content"], is_user=msg["role"] == "user", key=str(i))
+
+if promt := st.chat_input("Ask any qurstion about the PDF"):
+    st.session_state.messages.append({"role": "user", "content": promt})
+    message(promt, is_user=True)
+
+with st.spinner("Thinking..."):
+    response = st.session_state.app.chat(promt)
+    st.session_state.messages.append({"role": "assistant", "content":response})
+    message(response)
+
+if st.button("Clear Chat History"):
+    st.session_state.messages = []
